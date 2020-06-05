@@ -23,7 +23,7 @@ export class HeroesComponent implements OnInit {
       .subscribe(
         heroes => (this.heroes = heroes),
         error => (this.error = error)
-      )
+      );
   }
 
   addHero(): void {
@@ -40,7 +40,7 @@ export class HeroesComponent implements OnInit {
 
   deleteHero(hero: Hero, event: any): void {
     event.stopPropagation();
-    this.heroService.delete(hero).subscribe(res => {
+    this.heroService.delete(hero).subscribe(() => {
       this.heroes = this.heroes.filter(h => h !== hero);
       if (this.selectedHero === hero) {
         this.selectedHero = null;
