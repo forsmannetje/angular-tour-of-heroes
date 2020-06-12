@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Hero } from '../models/hero.model';
-import { HeroService } from '../services/hero.service';
+import { HeroService } from '../services/hero/hero.service';
 
 @Component({
   selector: 'my-heroes',
@@ -19,7 +19,7 @@ export class HeroesComponent implements OnInit {
 
   getHeroes(): void {
     this.heroService
-      .getHeroes()
+      .getAllHeroes()
       .subscribe(
         heroes => (this.heroes = heroes),
         error => (this.error = error)

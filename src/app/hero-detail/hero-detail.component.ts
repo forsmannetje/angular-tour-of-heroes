@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Hero } from '../models/hero.model';
-import { HeroService } from '../services/hero.service';
+import { HeroService } from '../services/hero/hero.service';
 
 @Component({
     selector: 'my-hero-detail',
@@ -25,7 +25,7 @@ export class HeroDetailComponent implements OnInit {
             if (params['id'] !== undefined) {
                 const id = +params['id'];
                 this.navigated = true;
-                this.heroService.getHero(id).subscribe(hero => (this.hero = hero));
+                this.heroService.findHeroById(id).subscribe(hero => (this.hero = hero));
             } else {
                 this.navigated = false;
                 this.hero = new Hero();
@@ -34,7 +34,7 @@ export class HeroDetailComponent implements OnInit {
     }
 
     save(): void {
-        this.heroService.save(this.hero).subscribe(hero => {
+        this.heroService.store(this.hero).subscribe(hero => {
             this.hero = hero; // saved hero, w/ id if new
             this.goBack(hero);
         }, error => (this.error = error)); // TODO: Display error message
