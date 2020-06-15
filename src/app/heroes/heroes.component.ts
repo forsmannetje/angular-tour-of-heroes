@@ -1,63 +1,59 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Hero } from '../models/hero.model';
 import { HeroService } from '../services/hero/hero.service';
 
 @Component({
-  selector: 'my-heroes',
-  templateUrl: './heroes.component.html',
-  styleUrls: ['./heroes.component.css']
+    selector: 'my-heroes',
+    templateUrl: './heroes.component.html'
 })
 export class HeroesComponent implements OnInit {
-  heroes: Hero[];
-  selectedHero: Hero;
-  addingHero = false;
-  error: any;
-  showNgFor = false;
+    heroes: Hero[];
+    selectedHero: Hero;
+    addingHero = false;
+    error: any;
 
-  constructor(private router: Router, private heroService: HeroService) {}
-
-  getHeroes(): void {
-    this.heroService
-      .getAllHeroes()
-      .subscribe(
-        heroes => (this.heroes = heroes),
-        error => (this.error = error)
-      );
-  }
-
-  addHero(): void {
-    this.addingHero = true;
-    this.selectedHero = null;
-  }
-
-  close(savedHero: Hero): void {
-    this.addingHero = false;
-    if (savedHero) {
-      this.getHeroes();
+    constructor(private heroService: HeroService) {
     }
-  }
 
-  deleteHero(hero: Hero, event: any): void {
-    event.stopPropagation();
-    this.heroService.delete(hero).subscribe(() => {
-      this.heroes = this.heroes.filter(h => h !== hero);
-      if (this.selectedHero === hero) {
+    ngOnInit(): void {
+        this.loadHeroes();
+    }
+
+    addHero(): void {
+        this.addingHero = true;
         this.selectedHero = null;
-      }
-    }, error => (this.error = error));
-  }
+    }
 
-  ngOnInit(): void {
-    this.getHeroes();
-  }
+    close(savedHero: Hero): void {
+        this.addingHero = false;
+        if (savedHero) {
+            this.loadHeroes();
+        }
+    }
 
-  onSelect(hero: Hero): void {
-    this.selectedHero = hero;
-    this.addingHero = false;
-  }
+    async deleteHero(hero: Hero, event: any): Promise<void> {
+        event.stopPropagation();
+        try {
+            if (this.selectedHero === hero) {
+                this.selectedHero = null;
+            }
+            await this.heroService.delete(hero).toPromise();
+            this.loadHeroes();
+        } catch (error) {
+            this.error = error;
+        }
+    }
 
-  gotoDetail(): void {
-    this.router.navigate(['/detail', this.selectedHero.id]);
-  }
+    onSelect(hero: Hero): void {
+        this.selectedHero = hero;
+        this.addingHero = false;
+    }
+
+    private async loadHeroes(): Promise<void> {
+        try {
+            this.heroes = await this.heroService.getAllHeroes().toPromise();
+        } catch (error) {
+            this.error = error;
+        }
+    }
 }

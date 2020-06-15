@@ -1,46 +1,47 @@
-<h2>My Heroes</h2>
-
-<ul class="heroes">
-    <li *ngFor="let hero of heroes" (click)="onSelect(hero)" [class.selected]="hero === selectedHero">
-    <span class="hero-element">
-      <span class="badge">{{hero.id}}</span> {{hero.name}}
-    </span>
-        <button class="delete-button" (click)="deleteHero(hero, $event)">Delete</button>
-    </li>
-</ul>
-
-<div class="error" *ngIf="error">{{error}}</div>
-<button (click)="addHero()">Add New Hero</button>
-<div *ngIf="addingHero">
-    <my-hero-detail (close)="close($event)"></my-hero-detail>
+<div class="row">
+    <div class="col-sm-12">
+        <h1>My Heroes</h1>
+    </div>
+</div>
+<div class="row" *ngIf="error">
+    <div class="col-sm-12">
+        <div class="alert alert-danger">{{ error }}</div>
+    </div>
 </div>
 
-<div *ngIf="selectedHero">
-    <h2>
-        {{selectedHero.name | uppercase}} is my hero
-    </h2>
-    <button (click)="gotoDetail()">View Details</button>
+<div class="row">
+    <div class="col-sm-1">
+        <table class="table table-hover">
+            <tbody>
+                <tr *ngFor="let hero of heroes" (click)="onSelect(hero)">
+                    <td><span class="badge badge-primary">{{hero.id}}</span></td>
+                    <td>{{hero.name}}</td>
+                    <td>
+                        <button type="button"
+                                class="btn btn-danger btn-sm"
+                                (click)="deleteHero(hero, $event)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
-
-<div>
-    <style>
-        .hidden {
-            visibility: hidden
-        }
-    </style>
-    <h4>ngFor Features</h4>
-    <button (click)="showNgFor=!showNgFor">{{showNgFor ? 'Hide' : 'Show'}} ngFor Features</button>
-    <table [class.hidden]="!showNgFor">
-        <tbody>
-        <tr *ngFor="let hero of heroes; let ix = index; let c = count; let e = even; let o = odd; let f = first; let l = last">
-            <td>{{hero.name}}</td>
-            <td>{{ix}}</td>
-            <td>{{c}}</td>
-            <td>{{e}}</td>
-            <td>{{o}}</td>
-            <td>{{f}}</td>
-            <td>{{l}}</td>
-        </tr>
-        </tbody>
-    </table>
+<div class="row mt-3">
+    <div class="col-sm-12">
+        <button class="btn btn-success" (click)="addHero()">Add New Hero</button>
+    </div>
+    <div class="col-sm-12" *ngIf="addingHero">
+        <my-hero-detail (close)="close($event)"></my-hero-detail>
+    </div>
+</div>
+<div class="row mt-3" *ngIf="selectedHero">
+    <div class="col-sm-12">
+        <h2>{{selectedHero.name | capitalize}} is my hero</h2>
+        <a class="btn btn-primary"
+           [routerLink]="['/detail', selectedHero.id]">
+            View Details
+        </a>
+    </div>
 </div>
